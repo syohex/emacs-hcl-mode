@@ -148,7 +148,7 @@
   "Keymap for Hcl major mode.")
 
 ;;;###autoload
-(define-derived-mode hcl-mode prog-mode "Hcl"
+(define-derived-mode hcl-mode prog-mode "HCL"
   "Major mode for editing hcl configuration file"
 
   (setq font-lock-defaults '((hcl-font-lock-keywords)))
