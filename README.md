@@ -5,6 +5,9 @@ Major mode of [Hashicorp Configuration Language](https://github.com/hashicorp/hc
 
 ## Screenshot
 
+![hcl-mode](image/hcl-mode.png)
+
+
 ## Features
 
 - Syntax highlighting
