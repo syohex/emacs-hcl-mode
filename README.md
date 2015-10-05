@@ -1,4 +1,4 @@
-# hcl-mode
+# hcl-mode [![travis badge][travis-badge]][travis-link]
 
 Major mode of [Hashicorp Configuration Language](https://github.com/hashicorp/hcl)
 
@@ -27,3 +27,6 @@ Indentation size
 (custom-set-variables
  '(hcl-indent-level 4))
 ```
+
+[travis-badge]: https://travis-ci.org/syohex/emacs-hcl-mode.svg
+[travis-link]: https://travis-ci.org/syohex/emacs-hcl-mode
