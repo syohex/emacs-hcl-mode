@@ -1,4 +1,4 @@
-# hcl-mode [![travis badge][travis-badge]][travis-link]
+# hcl-mode [![travis badge][travis-badge]][travis-link] [![melpa badge][melpa-badge]][melpa-link] [![melpa stable badge][melpa-stable-badge]][melpa-stable-link]
 
 Major mode of [Hashicorp Configuration Language](https://github.com/hashicorp/hcl)
 
@@ -30,3 +30,7 @@ Indentation size
 
 [travis-badge]: https://travis-ci.org/syohex/emacs-hcl-mode.svg
 [travis-link]: https://travis-ci.org/syohex/emacs-hcl-mode
+[melpa-link]: https://melpa.org/#/hcl-mode
+[melpa-stable-link]: https://stable.melpa.org/#/hcl-mode
+[melpa-badge]: https://melpa.org/packages/hcl-mode-badge.svg
+[melpa-stable-badge]: https://stable.melpa.org/packages/hcl-mode-badge.svg
