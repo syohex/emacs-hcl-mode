@@ -28,6 +28,11 @@ Indentation size
  '(hcl-indent-level 4))
 ```
 
+## See Also
+
+- [terraform-mode](https://github.com/syohex/emacs-terraform-mode)
+
+
 [travis-badge]: https://travis-ci.org/syohex/emacs-hcl-mode.svg
 [travis-link]: https://travis-ci.org/syohex/emacs-hcl-mode
 [melpa-link]: https://melpa.org/#/hcl-mode
