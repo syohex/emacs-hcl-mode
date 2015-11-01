@@ -8,6 +8,15 @@ Major mode of [Hashicorp Configuration Language](https://github.com/hashicorp/hc
 ![hcl-mode](image/hcl-mode.png)
 
 
+## Installation
+
+`hcl-mode` is available on [MELPA](https://melpa.org/) and [MELPA stable](https://stable.melpa.org/)
+
+You can install `hcl-mode` with the following command.
+
+<kbd>M-x package-install [RET] hcl-mode [RET]</kbd>
+
+
 ## Features
 
 - Syntax highlighting
