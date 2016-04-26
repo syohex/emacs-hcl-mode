@@ -129,4 +129,30 @@ bar = \"${foo}\"
     (forward-cursor-on "baz")
     (should (face-at-cursor-p 'font-lock-comment-face))))
 
+(ert-deftest here-document ()
+  "Here document"
+  (with-hcl-temp-buffer
+    "
+user_data = <<EOF
+#!/usr/bin/env bash
+rsync -aHv foo:bar/* ./baz/
+EOF
+
+foo = 10
+"
+    (forward-cursor-on "EOF")
+    (should (face-at-cursor-p 'font-lock-string-face))
+
+    (forward-cursor-on "^#!")
+    (should (face-at-cursor-p 'font-lock-string-face))
+
+    (forward-cursor-on "bash")
+    (should (face-at-cursor-p 'font-lock-string-face))
+
+    (forward-cursor-on "EOF")
+    (should (face-at-cursor-p 'font-lock-string-face))
+
+    (forward-cursor-on "foo")
+    (face-at-cursor-p 'font-lock-variable-name-face)))
+
 ;;; test-highlighting ends here

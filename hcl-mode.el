@@ -5,7 +5,7 @@
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-hcl-mode
 ;; Version: 0.01
-;; Package-Requires: ((cl-lib "0.5"))
+;; Package-Requires: ((emacs "24") (cl-lib "0.5"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -140,6 +140,31 @@
         (skip-chars-forward "^}")
         (forward-line +1)))))
 
+(eval-and-compile
+  (defconst hcl--here-doc-beg-re
+    "<<[~-]?\\(?:\\([a-zA-Z0-9_]+\\)\\|\"\\([^\"]+\\)\"\\|'\\([^']+\\)'\\)"))
+
+(defun hcl--syntax-propertize-heredoc (limit)
+  (goto-char (match-beginning 0))
+  (let ((heredoc-marker (cl-loop for i from 1 to 3
+                                 when (match-string i)
+                                 return it)))
+    (put-text-property (point) (1+ (point)) 'syntax-table (string-to-syntax "|"))
+    (let ((end-re (concat "^\\(" heredoc-marker "\\)\\W")))
+      (if (re-search-forward end-re nil t)
+          (goto-char (match-end 1))
+        (goto-char (point-max)))
+      (put-text-property (1- (point)) (point) 'syntax-table (string-to-syntax "|"))
+      (goto-char (match-end 0)))))
+
+(defun hcl--syntax-propertize-function (start end)
+  (goto-char start)
+  (funcall
+   (syntax-propertize-rules
+    (hcl--here-doc-beg-re
+     (0 (ignore (hcl--syntax-propertize-heredoc end)))))
+   (point) end))
+
 (defvar hcl-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "C-M-a") 'hcl-beginning-of-defun)
@@ -176,6 +201,9 @@
        'hcl-beginning-of-defun)
   (set (make-local-variable 'end-of-defun-function)
        'hcl-end-of-defun)
+
+  (set (make-local-variable 'syntax-propertize-function)
+       #'hcl--syntax-propertize-function)
 
   ;; electric-mode
   (set (make-local-variable 'electric-indent-chars)
