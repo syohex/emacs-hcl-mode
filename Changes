@@ -1,4 +1,7 @@
 Revision history for hcl-mode.el
 
-Revision 0.01 2013/10/06 syohex
+Revision 0.02 2016/05/03 syohex
+   - Support here document syntax highlighting
+
+Revision 0.01 2015/10/06 syohex
    - Initial version
