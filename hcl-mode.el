@@ -35,8 +35,7 @@
 
 (defcustom hcl-indent-level 2
   "The tab width to use when indenting."
-  :type 'integer
-  :group 'hcl)
+  :type 'integer)
 
 (defconst hcl--block-regexp
   "^\\s-*[^{]+{")
