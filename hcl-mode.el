@@ -209,8 +209,9 @@
        (append "{}[]" electric-indent-chars)))
 
 ;;;###autoload
-(add-to-list 'auto-mode-alist '("\\.hcl\\'" . hcl-mode))
-(add-to-list 'auto-mode-alist '("\\.nomad\\'" . hcl-mode))
+(progn
+  (add-to-list 'auto-mode-alist '("\\.hcl\\'" . hcl-mode))
+  (add-to-list 'auto-mode-alist '("\\.nomad\\'" . hcl-mode)))
 
 (provide 'hcl-mode)
 
