@@ -5,7 +5,7 @@
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 ;; URL: https://github.com/syohex/emacs-hcl-mode
 ;; Version: 0.02
-;; Package-Requires: ((emacs "24") (cl-lib "0.5"))
+;; Package-Requires: ((emacs "24.3"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -188,25 +188,21 @@
   (modify-syntax-entry ?/  ". 124b" hcl-mode-syntax-table)
   (modify-syntax-entry ?*  ". 23" hcl-mode-syntax-table)
 
-  (set (make-local-variable 'comment-start) "#")
-  (set (make-local-variable 'comment-use-syntax) t)
-  (set (make-local-variable 'comment-start-skip) "\\(//+\\|/\\*+\\)\\s *")
+  (setq-local comment-start "#")
+  (setq-local comment-use-syntax t)
+  (setq-local comment-start-skip "\\(//+\\|/\\*+\\)\\s *")
 
   ;; indentation
   (make-local-variable 'hcl-indent-level)
-  (set (make-local-variable 'indent-line-function) 'hcl-indent-line)
+  (setq-local indent-line-function 'hcl-indent-line)
 
-  (set (make-local-variable 'beginning-of-defun-function)
-       'hcl-beginning-of-defun)
-  (set (make-local-variable 'end-of-defun-function)
-       'hcl-end-of-defun)
+  (setq-local beginning-of-defun-function #'hcl-beginning-of-defun)
+  (setq-local end-of-defun-function #'hcl-end-of-defun)
 
-  (set (make-local-variable 'syntax-propertize-function)
-       #'hcl--syntax-propertize-function)
+  (setq-local syntax-propertize-function #'hcl--syntax-propertize-function)
 
   ;; electric-mode
-  (set (make-local-variable 'electric-indent-chars)
-       (append "{}[]" electric-indent-chars)))
+  (setq-local electric-indent-chars (append "{}[]" electric-indent-chars)))
 
 ;;;###autoload
 (progn
