@@ -1,4 +1,4 @@
-;;; hcl-mode.el --- Major mode for Hashicorp
+;;; hcl-mode.el --- Major mode for Hashicorp -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2016 by Syohei YOSHIDA
 
