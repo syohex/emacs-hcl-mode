@@ -143,11 +143,6 @@
   (defconst hcl--here-doc-beg-re
     "[^<]<<-?\\s-*\\\\?\\(\\(?:['\"][^'\"]+['\"]\\|\\sw\\|[-/~._]\\)+\\)\\(\n\\)"))
 
-(defun hcl--in-comment-or-string-p (start)
-  (save-excursion
-    (let ((state (syntax-ppss start)))
-      (or (nth 3 state) (nth 4 state)))))
-
 (defun hcl--syntax-propertize-heredoc (end)
   (let ((ppss (syntax-ppss)))
     (when (eq t (nth 3 ppss))
@@ -162,7 +157,9 @@
 
 (defun hcl--font-lock-open-heredoc (start string eol)
   (unless (or (memq (char-before start) '(?< ?>))
-	      (hcl--in-comment-or-string-p start))
+	      (save-excursion
+                (goto-char start)
+                (hcl--in-string-or-comment-p)))
     (let ((str (replace-regexp-in-string "['\"]" "" string))
           (ppss (save-excursion (syntax-ppss eol))))
       (put-text-property eol (1+ eol) 'hcl-here-doc-marker str)
