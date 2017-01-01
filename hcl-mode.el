@@ -141,27 +141,43 @@
 
 (eval-and-compile
   (defconst hcl--here-doc-beg-re
-    "<<[~-]?\\(?:\\([a-zA-Z0-9_]+\\)\\|\"\\([^\"]+\\)\"\\|'\\([^']+\\)'\\)"))
+    "[^<]<<-?\\s-*\\\\?\\(\\(?:['\"][^'\"]+['\"]\\|\\sw\\|[-/~._]\\)+\\)\\(\n\\)"))
 
-(defun hcl--syntax-propertize-heredoc (limit)
-  (goto-char (match-beginning 0))
-  (let ((heredoc-marker (cl-loop for i from 1 to 3
-                                 when (match-string i)
-                                 return it)))
-    (put-text-property (point) (1+ (point)) 'syntax-table (string-to-syntax "|"))
-    (let ((end-re (concat "^\\(" heredoc-marker "\\)\\W")))
-      (if (re-search-forward end-re nil t)
-          (goto-char (match-end 1))
-        (goto-char (point-max)))
-      (put-text-property (1- (point)) (point) 'syntax-table (string-to-syntax "|"))
-      (goto-char (match-end 0)))))
+(defun hcl--in-comment-or-string-p (start)
+  (save-excursion
+    (let ((state (syntax-ppss start)))
+      (or (nth 3 state) (nth 4 state)))))
+
+(defun hcl--syntax-propertize-heredoc (end)
+  (let ((ppss (syntax-ppss)))
+    (when (eq t (nth 3 ppss))
+      (let ((key (get-text-property (nth 8 ppss) 'hcl-here-doc-marker))
+            (case-fold-search nil))
+        (when (re-search-forward
+               (concat "^\\(?:[ \t]*\\)" (regexp-quote key) "\\(\n\\)")
+               end 'move)
+          (let ((eol (match-beginning 1)))
+            (put-text-property eol (1+ eol)
+                               'syntax-table (string-to-syntax "|"))))))))
+
+(defun hcl--font-lock-open-heredoc (start string eol)
+  (unless (or (memq (char-before start) '(?< ?>))
+	      (hcl--in-comment-or-string-p start))
+    (let ((str (replace-regexp-in-string "['\"]" "" string))
+          (ppss (save-excursion (syntax-ppss eol))))
+      (put-text-property eol (1+ eol) 'hcl-here-doc-marker str)
+      (prog1 (string-to-syntax "|")
+        (goto-char (+ 2 start))))))
 
 (defun hcl--syntax-propertize-function (start end)
   (goto-char start)
+  (hcl--syntax-propertize-heredoc end)
   (funcall
    (syntax-propertize-rules
     (hcl--here-doc-beg-re
-     (0 (ignore (hcl--syntax-propertize-heredoc end)))))
+     (2 (hcl--font-lock-open-heredoc
+         (match-beginning 0) (match-string 1) (match-beginning 2))))
+    ("\\s|" (0 (prog1 nil (hcl--syntax-propertize-heredoc end)))))
    (point) end))
 
 (defvar hcl-mode-map
