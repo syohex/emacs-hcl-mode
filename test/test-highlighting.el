@@ -140,9 +140,6 @@ EOF
 
 foo = 10
 "
-    (forward-cursor-on "EOF")
-    (should (face-at-cursor-p 'font-lock-string-face))
-
     (forward-cursor-on "^#!")
     (should (face-at-cursor-p 'font-lock-string-face))
 
@@ -151,6 +148,9 @@ foo = 10
 
     (forward-cursor-on "EOF")
     (should (face-at-cursor-p 'font-lock-string-face))
+
+    (goto-char (line-end-position))
+    (newline)
 
     (forward-cursor-on "foo")
     (face-at-cursor-p 'font-lock-variable-name-face)))
