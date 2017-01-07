@@ -39,7 +39,7 @@ Indentation size
 
 ## See Also
 
-- [terraform-mode](https://github.com/syohex/emacs-terraform-mode)
+- [terraform-mode](https://github.com/syohex/emacs-terraform-mode): A major mode of terraform configuration file
 
 
 [travis-badge]: https://travis-ci.org/syohex/emacs-hcl-mode.svg
