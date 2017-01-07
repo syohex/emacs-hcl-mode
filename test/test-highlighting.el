@@ -1,6 +1,6 @@
 ;;; test-highlighting.el --- test for highlighting of hcl-mode
 
-;; Copyright (C) 2015 by Syohei YOSHIDA
+;; Copyright (C) 2017 by Syohei YOSHIDA
 
 ;; Author: Syohei YOSHIDA <syohex@gmail.com>
 
