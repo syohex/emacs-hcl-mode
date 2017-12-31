@@ -86,6 +86,17 @@ bar = \"${foo}\"
     (forward-char 1)
     (should (face-at-cursor-p 'font-lock-variable-name-face))))
 
+(ert-deftest multiline-string-interpolation ()
+  "Syntax highlight of multi-line string interpolation"
+  (with-hcl-temp-buffer
+   "
+foo = \"${1
++ 1}\""
+
+   (forward-cursor-on "{1")
+   (forward-char 1)
+   (should (face-at-cursor-p 'font-lock-variable-name-face))))
+
 (ert-deftest single-line-comment ()
   "Syntax highlight of single line comment"
 

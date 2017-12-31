@@ -40,9 +40,8 @@
 (defconst hcl--block-regexp
   "^\\s-*[^{]+{")
 
-;; String Interpolation(This regexp is taken from ruby-mode)
 (defconst hcl--string-interpolation-regexp
-  "\\${[^}\n\\\\]*\\(?:\\\\.[^}\n\\\\]*\\)*}")
+  "\\${\\([^}]\\|\n\\)*}?")
 
 (defconst hcl--assignment-regexp
   "\\s-*\\([[:word:]]+\\)\\s-*=\\(?:[^>=]\\)")
@@ -189,6 +188,7 @@
   "Major mode for editing hcl configuration file"
 
   (setq font-lock-defaults '((hcl-font-lock-keywords)))
+  (setq font-lock-multiline t)
 
   (modify-syntax-entry ?_ "w" hcl-mode-syntax-table)
 
