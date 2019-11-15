@@ -45,10 +45,10 @@
   "\\${[^}\n\\\\]*\\(?:\\\\.[^}\n\\\\]*\\)*}")
 
 (defconst hcl--assignment-regexp
-  "\\s-*\\([[:word:]]+\\)\\s-*=\\(?:[^>=]\\)")
+  "\\s-*\\([[:word:]\\-]+\\)\\s-*=\\(?:[^>=]\\)")
 
 (defconst hcl--map-regexp
-  "\\s-*\\([[:word:]]+\\)\\s-*{")
+  "\\s-*\\([[:word:]\\-]+\\)\\s-*{")
 
 (defconst hcl--boolean-regexp
   (concat "\\(?:^\\|[^.]\\)"
