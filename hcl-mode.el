@@ -30,7 +30,7 @@
 (require 'rx)
 
 (defgroup hcl nil
-  "Major mode of Hashicorp Configuration Language."
+  "Major mode for Hashicorp Configuration Language."
   :group 'languages)
 
 (defcustom hcl-indent-level 2
@@ -44,18 +44,21 @@
 (defconst hcl--string-interpolation-regexp
   "\\${[^}\n\\\\]*\\(?:\\\\.[^}\n\\\\]*\\)*}")
 
+(defconst hcl--identifier-regexp
+  "\\_<\\(\\sw+\\(?:\\s_+\\sw+\\)*\\)\\_>")
+
 (defconst hcl--assignment-regexp
-  "\\s-*\\([[:word:]]+\\)\\s-*=\\(?:[^>=]\\)")
+  (concat hcl--identifier-regexp "\\s-*=\\(?:[^>=]\\)"))
 
 (defconst hcl--map-regexp
-  "\\s-*\\([[:word:]]+\\)\\s-*{")
+  (concat hcl--identifier-regexp "\\s-*{"))
 
 (defconst hcl--boolean-regexp
   (concat "\\(?:^\\|[^.]\\)"
           (regexp-opt '("true" "false" "on" "off" "yes" "no")
                       'words)))
 
-(defvar hcl-font-lock-keywords
+(defconst hcl-font-lock-keywords
   `((,hcl--assignment-regexp 1 font-lock-variable-name-face)
     (,hcl--boolean-regexp . font-lock-constant-face)
     (,hcl--map-regexp 1 font-lock-type-face)
@@ -160,8 +163,7 @@
 	      (save-excursion
                 (goto-char start)
                 (hcl--in-string-or-comment-p)))
-    (let ((str (replace-regexp-in-string "['\"]" "" string))
-          (ppss (save-excursion (syntax-ppss eol))))
+    (let ((str (replace-regexp-in-string "['\"]" "" string)))
       (put-text-property eol (1+ eol) 'hcl-here-doc-marker str)
       (prog1 (string-to-syntax "|")
         (goto-char (+ 2 start))))))
@@ -184,22 +186,29 @@
     map)
   "Keymap for Hcl major mode.")
 
+(defconst hcl-mode-syntax-table
+  (let ((table (make-syntax-table)))
+    (prog1
+        table
+      (modify-syntax-entry ?_ "_" table)
+      (modify-syntax-entry ?- "_" table)
+      (modify-syntax-entry ?= "." table)
+
+      ;; Comments
+      ;; Single line comment
+      (modify-syntax-entry ?# "< b" table)
+      (modify-syntax-entry ?\n "> b" table)
+
+      ;; multiple line comment(/* ... */) taken from `go-mode'
+      (modify-syntax-entry ?/  ". 124b" table)
+      (modify-syntax-entry ?*  ". 23" table)))
+  "Syntax table for `hcl-mode'.")
+
 ;;;###autoload
 (define-derived-mode hcl-mode prog-mode "HCL"
   "Major mode for editing hcl configuration file"
 
   (setq font-lock-defaults '((hcl-font-lock-keywords)))
-
-  (modify-syntax-entry ?_ "w" hcl-mode-syntax-table)
-
-  ;;; Comments
-  ;; Single line comment
-  (modify-syntax-entry ?# "< b" hcl-mode-syntax-table)
-  (modify-syntax-entry ?\n "> b" hcl-mode-syntax-table)
-
-  ;; multiple line comment(/* ... */) taken from `go-mode'
-  (modify-syntax-entry ?/  ". 124b" hcl-mode-syntax-table)
-  (modify-syntax-entry ?*  ". 23" hcl-mode-syntax-table)
 
   (setq-local comment-start "#")
   (setq-local comment-use-syntax t)

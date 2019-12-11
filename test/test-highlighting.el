@@ -60,6 +60,14 @@ foo=\"var\"
 
   (with-hcl-temp-buffer
     "
+    foo-bar =      \"var\"
+"
+
+   (forward-cursor-on "foo")
+   (should (face-at-cursor-p 'font-lock-variable-name-face)))
+
+  (with-hcl-temp-buffer
+    "
 output \"name\" {
    bar = \"baz\"
    map {
