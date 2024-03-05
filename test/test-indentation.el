@@ -21,6 +21,7 @@
 
 ;;; Code:
 
+(require 'cl-lib)
 (require 'ert)
 (require 'hcl-mode)
 
@@ -114,5 +115,20 @@ array_var [
     (forward-cursor-on "foo")
     (call-interactively 'indent-for-tab-command)
     (should (= (current-indentation) hcl-indent-level))))
+
+(ert-deftest no-indentation-triggers-completion ()
+  "When no indentation is necessary, trigger symbol completion"
+  (with-hcl-temp-buffer
+    "
+    foo = \"val1\"
+    bar =
+"
+    (cl-letf (((symbol-function 'completion-at-point)
+	       (lambda () (insert "pass"))))
+      (forward-cursor-on "bar")
+      (call-interactively 'indent-for-tab-command)
+      (backward-word)
+      (message (buffer-string))
+      (should (looking-at "pass")))))
 
 ;;; test-indentation.el ends here

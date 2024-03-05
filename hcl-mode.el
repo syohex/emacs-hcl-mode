@@ -100,13 +100,15 @@
     (back-to-indentation)
     (if (hcl--in-string-or-comment-p)
         (goto-char curpoint)
-      (let ((block-indentation (hcl--block-indentation)))
-        (delete-region (line-beginning-position) (point))
-        (if block-indentation
-            (if (looking-at "[]}]")
-                (indent-to block-indentation)
-              (indent-to (+ block-indentation hcl-indent-level)))
-          (indent-to (hcl--previous-indentation)))
+      (let* ((block-indentation (hcl--block-indentation))
+	     (target-indentation (if block-indentation
+				     (if (looking-at "[]}]")
+					 block-indentation
+				       (+ block-indentation hcl-indent-level))
+				   (hcl--previous-indentation))))
+	(when (not (eql (current-column) target-indentation))
+	  (delete-region (line-beginning-position) (point))
+	  (indent-to target-indentation))
         (when (> (- (point-max) pos) (point))
           (goto-char (- (point-max) pos)))))))
 
